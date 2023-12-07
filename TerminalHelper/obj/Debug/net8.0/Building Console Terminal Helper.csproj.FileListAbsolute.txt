@@ -1,0 +1,12 @@
+D:\Projects\С#\Building Console Terminal Helper\Building Console Terminal Helper\bin\Debug\net8.0\Building Console Terminal Helper.deps.json
+D:\Projects\С#\Building Console Terminal Helper\Building Console Terminal Helper\bin\Debug\net8.0\Building Console Terminal Helper.dll
+D:\Projects\С#\Building Console Terminal Helper\Building Console Terminal Helper\bin\Debug\net8.0\Building Console Terminal Helper.pdb
+D:\Projects\С#\Building Console Terminal Helper\Building Console Terminal Helper\obj\Debug\net8.0\Building Console Terminal Helper.csproj.AssemblyReference.cache
+D:\Projects\С#\Building Console Terminal Helper\Building Console Terminal Helper\obj\Debug\net8.0\Building Console Terminal Helper.GeneratedMSBuildEditorConfig.editorconfig
+D:\Projects\С#\Building Console Terminal Helper\Building Console Terminal Helper\obj\Debug\net8.0\Building Console Terminal Helper.AssemblyInfoInputs.cache
+D:\Projects\С#\Building Console Terminal Helper\Building Console Terminal Helper\obj\Debug\net8.0\Building Console Terminal Helper.AssemblyInfo.cs
+D:\Projects\С#\Building Console Terminal Helper\Building Console Terminal Helper\obj\Debug\net8.0\Building Console Terminal Helper.csproj.CoreCompileInputs.cache
+D:\Projects\С#\Building Console Terminal Helper\Building Console Terminal Helper\obj\Debug\net8.0\Building Console Terminal Helper.dll
+D:\Projects\С#\Building Console Terminal Helper\Building Console Terminal Helper\obj\Debug\net8.0\refint\Building Console Terminal Helper.dll
+D:\Projects\С#\Building Console Terminal Helper\Building Console Terminal Helper\obj\Debug\net8.0\Building Console Terminal Helper.pdb
+D:\Projects\С#\Building Console Terminal Helper\Building Console Terminal Helper\obj\Debug\net8.0\ref\Building Console Terminal Helper.dll
