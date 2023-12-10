@@ -4,16 +4,25 @@ public class CmdEventArgs : EventArgs
 {
     public ReturnTypes DataType;
 
-    public List<object>? Data;
+    public List<string>? Data;
+
+    public List<string> Kwargs;
 
     public CmdEventArgs(ReturnTypes message)
     {
         DataType = message;
     }
     
-    public CmdEventArgs(ReturnTypes message, List<object> data)
+    public CmdEventArgs(ReturnTypes message, List<string> data)
     {
         DataType = message;
         Data = data;
+    }
+    
+    public CmdEventArgs(ReturnTypes message, List<string> data, List<string> kwargs)
+    {
+        DataType = message;
+        Data = data;
+        Kwargs = kwargs;
     }
 }

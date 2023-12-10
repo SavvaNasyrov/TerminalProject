@@ -4,5 +4,6 @@ public enum ReturnTypes
 {
     Nothing,
     Kwargs,
-    Unknown
+    Any,
+    AnyAndKwargs
 }

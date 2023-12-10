@@ -10,3 +10,4 @@ D:\Projects\С#\Building Console Terminal Helper\TerminalHelper\obj\Debug\net8.0
 D:\Projects\С#\Building Console Terminal Helper\TerminalHelper\obj\Debug\net8.0\refint\TerminalHelper.dll
 D:\Projects\С#\Building Console Terminal Helper\TerminalHelper\obj\Debug\net8.0\TerminalHelper.pdb
 D:\Projects\С#\Building Console Terminal Helper\TerminalHelper\obj\Debug\net8.0\ref\TerminalHelper.dll
+D:\Projects\С#\Building Console Terminal Helper\TerminalHelper\obj\Debug\net8.0\TerminalHelper.sourcelink.json

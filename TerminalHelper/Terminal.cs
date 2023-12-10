@@ -8,12 +8,17 @@ public class Terminal
 
     private readonly Dictionary<string, TerminalCommand> _terminalCommands = new(capacity:2);
 
-    private readonly Dictionary<string, string> _descriptions = new(capacity: 2);
+    public readonly Dictionary<string, string> Descriptions = new(capacity: 2);
+
+    private readonly Dictionary<string, string> _officialDescriptions = new()
+    {
+        {"clear" , "{no args}clears console"}
+    };
 
     public void AddNewCommand(string command, TerminalCommand action, string description)
     {
         _terminalCommands[command] = action;
-        _descriptions[command] = description;
+        Descriptions[command] = description;
     }
 
     public void RemoveCommand(string command)
@@ -28,9 +33,10 @@ public class Terminal
         return _terminalCommands[command ?? throw new InvalidOperationException()](args);
     }
 
-    public void Run(Condition condition)
+    public void Run(Condition condition, string preMessage)
     {
         Console.WriteLine("Terminal is running");
+        Console.WriteLine(preMessage);
         Console.WriteLine("Type \"help\" to see more");
         string? command;
         while (true)
@@ -43,11 +49,25 @@ public class Terminal
             if (command == "help")
             {
                 Console.WriteLine("Available commands: ");
-                foreach (var pair in _descriptions)
+                foreach (var pair in Descriptions)
+                {
+                    Console.WriteLine($"* \"{pair.Key}\" - {pair.Value} *");
+                }
+
+                Console.WriteLine("Available official commands: ");
+                foreach (var pair in _officialDescriptions)
                 {
                     Console.WriteLine($"* \"{pair.Key}\" - {pair.Value} *");
                 }
                 Console.WriteLine("----------------");
+                continue;
+            }
+            if (command == "clear")
+            {
+                Console.Clear();
+                Console.WriteLine("Terminal is running");
+                Console.WriteLine(preMessage);
+                Console.WriteLine("Type \"help\" to see more");
                 continue;
             }
 
@@ -70,7 +90,7 @@ public class Terminal
     {
         if (command is null) throw new ArgumentNullException();
         
-        var words = new List<object>(capacity: 1);
+        var words = new List<string>(capacity: 1);
         string word = "";
         foreach (var symbol in command)
         {
@@ -96,7 +116,48 @@ public class Terminal
         }
         else
         {
-            args = new CmdEventArgs(ReturnTypes.Kwargs, words);
+            bool isKwargs = true;
+            foreach (var obj in words)
+            {
+                if (obj[0] != '-') isKwargs = false;
+            }
+
+            if (isKwargs)
+            {
+                args = new CmdEventArgs(ReturnTypes.Kwargs);
+                args.Kwargs = words;
+            }
+            else
+            {
+                bool isContainsKwargs = false;
+                foreach (var obj in words)
+                {
+                    if (obj[0] == '-') isContainsKwargs = true;
+                }
+
+                if (isContainsKwargs)
+                {
+                    var kwargs = new List<string>();
+                    foreach (var obj in words)
+                    {
+                        if (obj[0] == '-')
+                        {
+                            kwargs.Add(obj);
+                        }
+                    }
+
+                    foreach (var kwarg in kwargs)
+                    {
+                        words.Remove(kwarg);
+                    }
+
+                    args = new CmdEventArgs(ReturnTypes.AnyAndKwargs, words, kwargs);
+                }
+                else
+                {
+                    args = new CmdEventArgs(ReturnTypes.Any, words);
+                }
+            }
         }
 
         return args;
