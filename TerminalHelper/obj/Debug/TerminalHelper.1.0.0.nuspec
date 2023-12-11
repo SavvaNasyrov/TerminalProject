@@ -5,7 +5,7 @@
     <version>1.0.0</version>
     <authors>TerminalHelper</authors>
     <description>Package Description</description>
-    <repository type="git" commit="98e86cd956718085d406caec4dcd9180a5c55c46" />
+    <repository type="git" commit="441573b97edc80034f458d78161dcd5fecd9823e" />
     <dependencies>
       <group targetFramework="net8.0" />
     </dependencies>

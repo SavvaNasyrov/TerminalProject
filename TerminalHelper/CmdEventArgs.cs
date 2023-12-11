@@ -6,7 +6,7 @@ public class CmdEventArgs : EventArgs
 
     public List<string>? Data;
 
-    public List<string> Kwargs;
+    public List<string>? Kwargs;
 
     public CmdEventArgs(ReturnTypes message)
     {

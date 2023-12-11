@@ -1,81 +1,76 @@
-﻿namespace Building_Console_Terminal_Helper;
+﻿using System.ComponentModel.Design;
+
+namespace Building_Console_Terminal_Helper;
 
 public class Terminal
 {
-    public delegate EventArgs TerminalCommand(CmdEventArgs args);
+    internal readonly Dictionary<string, DelegatesRepo.TerminalCommand> TerminalCommands = new(capacity:2);
 
-    public delegate bool Condition(string? command);
+    internal readonly Dictionary<string, string> Descriptions = new(capacity: 2);
 
-    private readonly Dictionary<string, TerminalCommand> _terminalCommands = new(capacity:2);
+    internal string PreMessage = "";
 
-    public readonly Dictionary<string, string> Descriptions = new(capacity: 2);
+    internal DelegatesRepo.Condition Condition = (command, args) => true;
+
+    internal bool UseOfficial = true;
 
     private readonly Dictionary<string, string> _officialDescriptions = new()
     {
         {"clear" , "{no args}clears console"}
     };
 
-    public void AddNewCommand(string command, TerminalCommand action, string description)
-    {
-        _terminalCommands[command] = action;
-        Descriptions[command] = description;
-    }
-
-    public void RemoveCommand(string command)
-    {
-        _terminalCommands.Remove(command);
-    }
-
+    /// <summary>Use it to build your own runtime. Command can contain args or kwargs(Auto-Parsing)</summary>
     public EventArgs Execute(string command)
     {
-        var args = ParseEventArgs(command);
-        command = FirstWord(command);
-        return _terminalCommands[command ?? throw new InvalidOperationException()](args);
+        var args = ArgsParser.ParseEventArgs(command);
+        command = ArgsParser.FirstWord(command);
+        return TerminalCommands[command ?? throw new InvalidOperationException()](args);
+    }
+    
+    /// <summary>Use it to build your own runtime.</summary>
+    public EventArgs Execute(string command, CmdEventArgs args)
+    {
+        return TerminalCommands[command ?? throw new InvalidOperationException()](args);
     }
 
-    public void Run(Condition condition, string preMessage)
+    /// <summary>Basic runtime. Reads and executes all added functions. Official functions is additional.</summary> 
+    public void Run()
     {
         Console.WriteLine("Terminal is running");
-        Console.WriteLine(preMessage);
+        Console.WriteLine(PreMessage);
         Console.WriteLine("Type \"help\" to see more");
         string? command;
         while (true)
         {
             Console.Write(">>> ");
             command = Console.ReadLine();
+            
+            var args = ArgsParser.ParseEventArgs(command ?? throw new InvalidOperationException());
+            command = ArgsParser.FirstWord(command);
 
-            if (condition(command) == false) break;
-
+            if (Condition(command, args) == false) break;
+            
             if (command == "help")
             {
-                Console.WriteLine("Available commands: ");
-                foreach (var pair in Descriptions)
-                {
-                    Console.WriteLine($"* \"{pair.Key}\" - {pair.Value} *");
-                }
-
-                Console.WriteLine("Available official commands: ");
-                foreach (var pair in _officialDescriptions)
-                {
-                    Console.WriteLine($"* \"{pair.Key}\" - {pair.Value} *");
-                }
-                Console.WriteLine("----------------");
+                Help();
                 continue;
             }
-            if (command == "clear")
+
+            if (UseOfficial)
             {
-                Console.Clear();
-                Console.WriteLine("Terminal is running");
-                Console.WriteLine(preMessage);
-                Console.WriteLine("Type \"help\" to see more");
-                continue;
+                if (command == "clear")
+                {
+                    Console.Clear();
+                    Console.WriteLine("Terminal is running");
+                    Console.WriteLine(PreMessage);
+                    Console.WriteLine("Type \"help\" to see more");
+                    continue;
+                }
             }
 
             try
             {
-                var args = ParseEventArgs(command);
-                command = FirstWord(command);
-                _terminalCommands[command ?? throw new InvalidOperationException()](args);
+                TerminalCommands[command ?? throw new InvalidOperationException()](args);
             }
             catch
             {
@@ -85,101 +80,23 @@ public class Terminal
 
         Console.WriteLine("Aborting runtime...");
     }
-
-    private CmdEventArgs ParseEventArgs(string? command)
+    private void Help()
     {
-        if (command is null) throw new ArgumentNullException();
-        
-        var words = new List<string>(capacity: 1);
-        string word = "";
-        foreach (var symbol in command)
+        Console.WriteLine("Available commands: ");
+        foreach (var pair in Descriptions)
         {
-            if (symbol != ' ')
-            {
-                word += symbol;
-            }
-            else
-            {
-                words.Add(word);
-                word = "";
-            }
+            Console.WriteLine($"* \"{pair.Key}\" - {pair.Value} *");
         }
-        words.Add(word);
-        
-        words.RemoveAt(0);
 
-        CmdEventArgs args;
-
-        if (words.Count == 0)
+        if (UseOfficial)
         {
-            args = new CmdEventArgs(ReturnTypes.Nothing);
-        }
-        else
-        {
-            bool isKwargs = true;
-            foreach (var obj in words)
+            Console.WriteLine("Available official commands: ");
+            foreach (var pair in _officialDescriptions)
             {
-                if (obj[0] != '-') isKwargs = false;
-            }
-
-            if (isKwargs)
-            {
-                args = new CmdEventArgs(ReturnTypes.Kwargs);
-                args.Kwargs = words;
-            }
-            else
-            {
-                bool isContainsKwargs = false;
-                foreach (var obj in words)
-                {
-                    if (obj[0] == '-') isContainsKwargs = true;
-                }
-
-                if (isContainsKwargs)
-                {
-                    var kwargs = new List<string>();
-                    foreach (var obj in words)
-                    {
-                        if (obj[0] == '-')
-                        {
-                            kwargs.Add(obj);
-                        }
-                    }
-
-                    foreach (var kwarg in kwargs)
-                    {
-                        words.Remove(kwarg);
-                    }
-
-                    args = new CmdEventArgs(ReturnTypes.AnyAndKwargs, words, kwargs);
-                }
-                else
-                {
-                    args = new CmdEventArgs(ReturnTypes.Any, words);
-                }
+                Console.WriteLine($"* \"{pair.Key}\" - {pair.Value} *");
             }
         }
 
-        return args;
-    }
-
-    private string FirstWord(string? command)
-    {
-        if (command is null) throw new ArgumentNullException();
-        
-        string word = "";
-        foreach (var symbol in command)
-        {
-            if (symbol != ' ')
-            {
-                word += symbol;
-            }
-            else
-            {
-                return word;
-            }
-        }
-
-        return word;
+        Console.WriteLine("----------------");
     }
 }
