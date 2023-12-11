@@ -1,3 +1,14 @@
+## Patchnote V1.2.1
+
+> # Warning!!! New version is incompatible to last version.
+
+#### Changes:
+* Added Builder Pattern
+* delegates replaced to DelegatesRepo
+* Added the opportunity to disable official commands
+* Added summaries
+* Condition has access to CmdEventArgs
+
 ## Patchnote V1.2.0
 
 > # Warning!!! New version is incompatible to last version.
