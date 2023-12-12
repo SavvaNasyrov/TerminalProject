@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.Design;
+using Building_Console_Terminal_Helper.Interfaces;
 
 namespace Building_Console_Terminal_Helper;
 
-public class Terminal
+public class BasicTerminal : Terminal
 {
     internal readonly Dictionary<string, DelegatesRepo.TerminalCommand> TerminalCommands = new(capacity:2);
 
@@ -20,7 +21,7 @@ public class Terminal
     };
 
     /// <summary>Use it to build your own runtime. Command can contain args or kwargs(Auto-Parsing)</summary>
-    public EventArgs Execute(string command)
+    public override EventArgs Execute(string command)
     {
         var args = ArgsParser.ParseEventArgs(command);
         command = ArgsParser.FirstWord(command);

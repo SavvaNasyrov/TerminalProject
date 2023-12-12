@@ -12,7 +12,7 @@ internal static class ArgsParser
 
         if (words.Count == 0)
         {
-            args = new CmdEventArgs(ReturnTypes.Nothing);
+            args = CmdEventArgs.Empty;
         }
         else
         {
